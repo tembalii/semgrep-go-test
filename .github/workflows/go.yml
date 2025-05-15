@@ -1,22 +1,23 @@
-name: Run Semgrep on Push
+name: Semgrep CI Scan
 
 on:
   push:
     branches:
       - main
+      
 
 jobs:
   semgrep:
     runs-on: ubuntu-latest
 
     env:
-        SEMGREP_APP_TOKEN : ${{ secrets.SEMGREP_APP_TOKEN }}
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Python (Semgrep requires it)
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
@@ -24,8 +25,8 @@ jobs:
       - name: Install Semgrep
         run: pip install semgrep
 
-     
-      - name: Run Semgrep CI scan
-        run: semgrep ci
+      - name: Authenticate with Semgrep
+        run: semgrep login --token $SEMGREP_APP_TOKEN
 
-    
+      - name: Run Semgrep and report to cloud
+        run: semgrep ci --no-suppress-errors
