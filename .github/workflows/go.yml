@@ -9,6 +9,9 @@ jobs:
   semgrep:
     runs-on: ubuntu-latest
 
+    env:
+        SEMGREP_APP_TOKEN : ${{ secrets.SEMGREP_APP_TOKEN }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -20,5 +23,9 @@ jobs:
 
       - name: Install Semgrep
         run: pip install semgrep
+
+     
+      - name: Run Semgrep CI scan
+        run: semgrep ci
 
     
